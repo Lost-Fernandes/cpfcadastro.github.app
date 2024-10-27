@@ -16,11 +16,9 @@ function iniciarCamera() {
 
 // Função para alternar entre a câmera frontal e traseira
 function alternarCamera() {
-    // Interrompe o stream atual
     if (streamAtual) {
         streamAtual.getTracks().forEach(track => track.stop());
     }
-    // Alterna entre as câmeras
     cameraAtual = cameraAtual === "user" ? "environment" : "user";
     iniciarCamera();
 }
@@ -31,12 +29,10 @@ function tirarFoto() {
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
 
-    // Ajusta o canvas para o tamanho do vídeo
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Converte a imagem do canvas para Base64
     fotoBase64 = canvas.toDataURL("image/png");
     alert("Foto capturada com sucesso!");
 }
@@ -61,8 +57,6 @@ function cadastrarPessoa() {
         };
         localStorage.setItem(cpf, JSON.stringify(pessoa));
         alert("Pessoa cadastrada com sucesso!");
-
-        // Limpa os campos
         document.getElementById("cpf").value = '';
         document.getElementById("nome").value = '';
         document.getElementById("idade").value = '';
@@ -94,11 +88,50 @@ function consultarPessoa() {
         let foto = document.getElementById("foto");
         foto.src = pessoa.foto;
         foto.style.display = "block";
+
+        document.getElementById("gerarPdfBtn").style.display = "inline";
+        document.getElementById("deletarBtn").style.display = "inline";
     } else {
         document.getElementById("info").innerText = "CPF não encontrado.";
         document.getElementById("foto").style.display = "none";
+        document.getElementById("gerarPdfBtn").style.display = "none";
+        document.getElementById("deletarBtn").style.display = "none";
     }
 }
 
-// Inicia a câmera ao carregar a página
-iniciarCamera();
+// Função para gerar PDF com os dados da pessoa consultada
+function gerarPDF() {
+    let cpfConsulta = document.getElementById("cpfConsulta").value;
+    let pessoa = JSON.parse(localStorage.getItem(cpfConsulta));
+
+    if (pessoa) {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        
+        doc.text(`CPF: ${cpfConsulta}`, 10, 10);
+        doc.text(`Nome: ${pessoa.nome}`, 10, 20);
+        doc.text(`Idade: ${pessoa.idade}`, 10, 30);
+        doc.text(`Endereço: ${pessoa.endereco}`, 10, 40);
+        doc.text(`Telefone: ${pessoa.telefone}`, 10, 50);
+        doc.text(`Email: ${pessoa.email}`, 10, 60);
+
+        if (pessoa.foto) {
+            doc.addImage(pessoa.foto, "PNG", 10, 70, 50, 50);
+        }
+
+        doc.save(`Cadastro_${cpfConsulta}.pdf`);
+    } else {
+        alert("Dados não encontrados para gerar PDF.");
+    }
+}
+
+// Função para deletar pessoa do localStorage
+function deletarPessoa() {
+    let cpfConsulta = document.getElementById("cpfConsulta").value;
+    localStorage.removeItem(cpfConsulta);
+    alert("Cadastro deletado com sucesso.");
+    document.getElementById("info").innerHTML = "";
+    document.getElementById("foto").style.display = "none";
+    document.getElementById("gerarPdfBtn").style.display = "none";
+    document.getElementById("deletarBtn").style.display = "none";
+}
