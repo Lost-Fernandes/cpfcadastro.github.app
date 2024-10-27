@@ -1,13 +1,29 @@
-// Inicia a webcam
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        document.getElementById("video").srcObject = stream;
-    })
-    .catch(error => {
-        console.error("Erro ao acessar a webcam:", error);
-    });
-
+let cameraAtual = "user"; // Inicia com a câmera frontal
 let fotoBase64 = "";
+let streamAtual;
+
+// Função para iniciar a câmera
+function iniciarCamera() {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: cameraAtual } })
+        .then(stream => {
+            streamAtual = stream;
+            document.getElementById("video").srcObject = stream;
+        })
+        .catch(error => {
+            console.error("Erro ao acessar a câmera:", error);
+        });
+}
+
+// Função para alternar entre a câmera frontal e traseira
+function alternarCamera() {
+    // Interrompe o stream atual
+    if (streamAtual) {
+        streamAtual.getTracks().forEach(track => track.stop());
+    }
+    // Alterna entre as câmeras
+    cameraAtual = cameraAtual === "user" ? "environment" : "user";
+    iniciarCamera();
+}
 
 // Função para capturar a foto
 function tirarFoto() {
@@ -25,7 +41,7 @@ function tirarFoto() {
     alert("Foto capturada com sucesso!");
 }
 
-// Função para cadastrar pessoa com mais informações e foto
+// Função para cadastrar pessoa
 function cadastrarPessoa() {
     let cpf = document.getElementById("cpf").value;
     let nome = document.getElementById("nome").value;
@@ -35,7 +51,6 @@ function cadastrarPessoa() {
     let email = document.getElementById("email").value;
 
     if (cpf && nome && idade && endereco && telefone && email && fotoBase64) {
-        // Cria um objeto com todas as informações da pessoa, incluindo a foto
         let pessoa = {
             nome: nome,
             idade: idade,
@@ -44,8 +59,6 @@ function cadastrarPessoa() {
             email: email,
             foto: fotoBase64
         };
-
-        // Armazena o objeto no localStorage como string JSON
         localStorage.setItem(cpf, JSON.stringify(pessoa));
         alert("Pessoa cadastrada com sucesso!");
 
@@ -68,10 +81,8 @@ function consultarPessoa() {
     let pessoa = localStorage.getItem(cpfConsulta);
 
     if (pessoa) {
-        // Converte a string JSON de volta para objeto
         pessoa = JSON.parse(pessoa);
 
-        // Exibe as informações da pessoa
         document.getElementById("info").innerHTML = `
             Nome: ${pessoa.nome}<br>
             Idade: ${pessoa.idade}<br>
@@ -80,7 +91,6 @@ function consultarPessoa() {
             Email: ${pessoa.email}
         `;
 
-        // Exibe a foto
         let foto = document.getElementById("foto");
         foto.src = pessoa.foto;
         foto.style.display = "block";
@@ -89,3 +99,6 @@ function consultarPessoa() {
         document.getElementById("foto").style.display = "none";
     }
 }
+
+// Inicia a câmera ao carregar a página
+iniciarCamera();
