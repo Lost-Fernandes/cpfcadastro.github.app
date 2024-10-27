@@ -89,10 +89,8 @@ function consultarPessoa() {
         document.getElementById("downloadPdfBtn").style.display = "inline";
         document.getElementById("deletarBtn").style.display = "inline";
 
-        // Verifica se o PDF já existe, se não existir, gera o PDF
-        if (!localStorage.getItem(`pdf_${cpfConsulta}`)) {
-            gerarPDF(cpfConsulta, pessoa);
-        }
+        // Gera o PDF toda vez que o cadastro é consultado, assegurando que ele exista para download
+        gerarPDF(cpfConsulta, pessoa);
     } else {
         alert("CPF não encontrado.");
     }
@@ -114,7 +112,7 @@ function gerarPDF(cpf, pessoa) {
     }
 
     let pdfBase64 = doc.output("datauristring");
-    localStorage.setItem(`pdf_${cpf}`, pdfBase64);
+    localStorage.setItem(`pdf_${cpf}`, pdfBase64);  // Salva o PDF em base64 no localStorage
 }
 
 function downloadPDF() {
