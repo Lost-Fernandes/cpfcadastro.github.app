@@ -108,7 +108,6 @@ function gerarPDF(cpf, pessoa) {
         doc.addImage(pessoa.foto, "PNG", 10, 70, 50, 50);
     }
 
-    // Salva o PDF em base64 no localStorage
     let pdfBase64 = doc.output("datauristring");
     localStorage.setItem(`pdf_${cpf}`, pdfBase64);
 }
