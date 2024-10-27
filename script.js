@@ -1,7 +1,8 @@
-let cameraAtual = "user";
+let cameraAtual = "user"; // Inicia com a câmera frontal
 let fotoBase64 = "";
 let streamAtual;
 
+// Função para iniciar a câmera
 function iniciarCamera() {
     navigator.mediaDevices.getUserMedia({ video: { facingMode: cameraAtual } })
         .then(stream => {
@@ -13,6 +14,7 @@ function iniciarCamera() {
         });
 }
 
+// Função para alternar entre a câmera frontal e traseira
 function alternarCamera() {
     if (streamAtual) {
         streamAtual.getTracks().forEach(track => track.stop());
@@ -21,6 +23,7 @@ function alternarCamera() {
     iniciarCamera();
 }
 
+// Função para capturar a foto
 function tirarFoto() {
     let video = document.getElementById("video");
     let canvas = document.getElementById("canvas");
@@ -34,6 +37,7 @@ function tirarFoto() {
     alert("Foto capturada com sucesso!");
 }
 
+// Função para cadastrar pessoa
 function cadastrarPessoa() {
     let cpf = document.getElementById("cpf").value;
     let nome = document.getElementById("nome").value;
@@ -51,12 +55,8 @@ function cadastrarPessoa() {
             email: email,
             foto: fotoBase64
         };
-
         localStorage.setItem(cpf, JSON.stringify(pessoa));
-        gerarPDF(cpf, pessoa);
         alert("Pessoa cadastrada com sucesso!");
-
-        // Limpa os campos após o cadastro
         document.getElementById("cpf").value = '';
         document.getElementById("nome").value = '';
         document.getElementById("idade").value = '';
@@ -69,6 +69,7 @@ function cadastrarPessoa() {
     }
 }
 
+// Função para consultar pessoa
 function consultarPessoa() {
     let cpfConsulta = document.getElementById("cpfConsulta").value;
     let pessoa = localStorage.getItem(cpfConsulta);
@@ -88,56 +89,49 @@ function consultarPessoa() {
         foto.src = pessoa.foto;
         foto.style.display = "block";
 
-        document.getElementById("downloadPdfBtn").style.display = "inline";
+        document.getElementById("gerarPdfBtn").style.display = "inline";
         document.getElementById("deletarBtn").style.display = "inline";
-
-        // Gera o PDF sempre que o cadastro é consultado
-        gerarPDF(cpfConsulta, pessoa);
     } else {
-        alert("CPF não encontrado.");
+        document.getElementById("info").innerText = "CPF não encontrado.";
+        document.getElementById("foto").style.display = "none";
+        document.getElementById("gerarPdfBtn").style.display = "none";
+        document.getElementById("deletarBtn").style.display = "none";
     }
 }
 
-function gerarPDF(cpf, pessoa) {
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-
-    doc.text(`CPF: ${cpf}`, 10, 10);
-    doc.text(`Nome: ${pessoa.nome}`, 10, 20);
-    doc.text(`Idade: ${pessoa.idade}`, 10, 30);
-    doc.text(`Endereço: ${pessoa.endereco}`, 10, 40);
-    doc.text(`Telefone: ${pessoa.telefone}`, 10, 50);
-    doc.text(`Email: ${pessoa.email}`, 10, 60);
-
-    if (pessoa.foto) {
-        doc.addImage(pessoa.foto, "PNG", 10, 70, 50, 50);
-    }
-
-    let pdfBase64 = doc.output("datauristring");
-    localStorage.setItem(`pdf_${cpf}`, pdfBase64);
-}
-
-function downloadPDF() {
+// Função para gerar PDF com os dados da pessoa consultada
+function gerarPDF() {
     let cpfConsulta = document.getElementById("cpfConsulta").value;
-    let pdfBase64 = localStorage.getItem(`pdf_${cpfConsulta}`);
+    let pessoa = JSON.parse(localStorage.getItem(cpfConsulta));
 
-    if (pdfBase64) {
-        let link = document.createElement("a");
-        link.href = pdfBase64;
-        link.download = `Cadastro_${cpfConsulta}.pdf`;
-        link.click();
+    if (pessoa) {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        
+        doc.text(`CPF: ${cpfConsulta}`, 10, 10);
+        doc.text(`Nome: ${pessoa.nome}`, 10, 20);
+        doc.text(`Idade: ${pessoa.idade}`, 10, 30);
+        doc.text(`Endereço: ${pessoa.endereco}`, 10, 40);
+        doc.text(`Telefone: ${pessoa.telefone}`, 10, 50);
+        doc.text(`Email: ${pessoa.email}`, 10, 60);
+
+        if (pessoa.foto) {
+            doc.addImage(pessoa.foto, "PNG", 10, 70, 50, 50);
+        }
+
+        doc.save(`Cadastro_${cpfConsulta}.pdf`);
     } else {
-        alert("PDF não encontrado para este CPF.");
+        alert("Dados não encontrados para gerar PDF.");
     }
 }
 
+// Função para deletar pessoa do localStorage
 function deletarPessoa() {
     let cpfConsulta = document.getElementById("cpfConsulta").value;
     localStorage.removeItem(cpfConsulta);
-    localStorage.removeItem(`pdf_${cpfConsulta}`);
     alert("Cadastro deletado com sucesso.");
     document.getElementById("info").innerHTML = "";
     document.getElementById("foto").style.display = "none";
-    document.getElementById("downloadPdfBtn").style.display = "none";
+    document.getElementById("gerarPdfBtn").style.display = "none";
     document.getElementById("deletarBtn").style.display = "none";
 }
