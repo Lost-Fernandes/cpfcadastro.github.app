@@ -55,6 +55,8 @@ function cadastrarPessoa() {
         localStorage.setItem(cpf, JSON.stringify(pessoa));
         gerarPDF(cpf, pessoa);
         alert("Pessoa cadastrada com sucesso!");
+
+        // Limpa os campos após o cadastro
         document.getElementById("cpf").value = '';
         document.getElementById("nome").value = '';
         document.getElementById("idade").value = '';
@@ -89,7 +91,7 @@ function consultarPessoa() {
         document.getElementById("downloadPdfBtn").style.display = "inline";
         document.getElementById("deletarBtn").style.display = "inline";
 
-        // Gera o PDF toda vez que o cadastro é consultado, assegurando que ele exista para download
+        // Gera o PDF sempre que o cadastro é consultado
         gerarPDF(cpfConsulta, pessoa);
     } else {
         alert("CPF não encontrado.");
@@ -112,7 +114,7 @@ function gerarPDF(cpf, pessoa) {
     }
 
     let pdfBase64 = doc.output("datauristring");
-    localStorage.setItem(`pdf_${cpf}`, pdfBase64);  // Salva o PDF em base64 no localStorage
+    localStorage.setItem(`pdf_${cpf}`, pdfBase64);
 }
 
 function downloadPDF() {
