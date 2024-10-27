@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Cadastro com Foto</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Adiciona a biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>Sistema de Cadastro de Pessoas</h1>
 
     <div id="cadastro">
         <h2>Cadastrar Pessoa</h2>
+        <!-- Campos de cadastro -->
         <label for="cpf">CPF:</label>
         <input type="text" id="cpf" placeholder="Digite o CPF">
         
-        <label for="nome">CPF: Nome:</label>
+        <label for="nome">Nome:</label>
         <input type="text" id="nome" placeholder="Digite o nome">
 
         <label for="idade">Idade:</label>
@@ -50,6 +53,8 @@
         <h2>Resultado</h2>
         <p id="info"></p>
         <img id="foto" alt="Foto da pessoa" style="display: none;">
+        <button onclick="gerarPDF()" style="display: none;" id="gerarPdfBtn">Gerar PDF</button>
+        <button onclick="deletarPessoa()" style="display: none;" id="deletarBtn">Deletar</button>
     </div>
 
     <script src="script.js"></script>
