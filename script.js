@@ -88,6 +88,11 @@ function consultarPessoa() {
 
         document.getElementById("downloadPdfBtn").style.display = "inline";
         document.getElementById("deletarBtn").style.display = "inline";
+
+        // Verifica se o PDF já existe, se não existir, gera o PDF
+        if (!localStorage.getItem(`pdf_${cpfConsulta}`)) {
+            gerarPDF(cpfConsulta, pessoa);
+        }
     } else {
         alert("CPF não encontrado.");
     }
