@@ -52,7 +52,7 @@ function cadastrarPessoa() {
 
     if (cpf && nome && idade && endereco && telefone && email && fotoBase64) {
         let pessoa = {
-            cpf, nome: nome,
+            nome: nome,
             idade: idade,
             endereco: endereco,
             telefone: telefone,
