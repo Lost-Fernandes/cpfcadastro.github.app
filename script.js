@@ -8,35 +8,33 @@ function abrirCamera() {
     iniciarCamera();
 }
 
-function iniciarCamera() {
+async function iniciarCamera() {
     const video = document.getElementById("camera");
 
-    // Define as configurações de vídeo com a preferência de câmera
+    // Configurações de vídeo para alternar entre câmera frontal e traseira
     const constraints = {
         video: {
-            facingMode: usandoCameraFrontal ? "user" : "environment"
+            facingMode: usandoCameraFrontal ? "user" : { exact: "environment" }
         }
     };
 
-    // Interrompe o stream atual se houver um, para evitar conflito ao trocar de câmera
-    if (streamAtual) {
-        streamAtual.getTracks().forEach(track => track.stop());
-    }
+    try {
+        // Libera qualquer stream existente antes de iniciar um novo
+        if (streamAtual) {
+            streamAtual.getTracks().forEach(track => track.stop());
+        }
 
-    // Solicita acesso à câmera com as configurações definidas
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
-            streamAtual = stream;
-            video.srcObject = stream;
-        })
-        .catch(error => {
-            console.error("Erro ao acessar a câmera:", error);
-            alert("Não foi possível acessar a câmera.");
-        });
+        // Obtém o novo stream da câmera e define como fonte do vídeo
+        streamAtual = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = streamAtual;
+    } catch (error) {
+        console.error("Erro ao acessar a câmera:", error);
+        alert("Não foi possível acessar a câmera.");
+    }
 }
 
 function alternarCamera() {
-    // Alterna entre a câmera frontal e traseira
+    // Alterna entre a câmera frontal e traseira e reinicia a câmera
     usandoCameraFrontal = !usandoCameraFrontal;
     iniciarCamera();
 }
