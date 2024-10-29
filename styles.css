@@ -20,7 +20,7 @@ body {
 /* Main Container */
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 400px; /* Ajustando a largura máxima para melhor centralização */
     background: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -108,6 +108,7 @@ button:hover {
 @media (max-width: 600px) {
     .container {
         padding: 15px;
+        width: 90%; /* Ajusta a largura para ocupar 90% da tela em dispositivos pequenos */
     }
 
     h2 {
