@@ -67,3 +67,4 @@ function consultarPessoa() {
         document.getElementById("fotoConsultada").style.display = "none";
     }
 }
+
