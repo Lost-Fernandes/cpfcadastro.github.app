@@ -11,18 +11,19 @@ function abrirCamera() {
 function iniciarCamera() {
     const video = document.getElementById("camera");
 
-    // Define a preferência de câmera: frontal ou traseira
+    // Define as configurações de vídeo com a preferência de câmera
     const constraints = {
         video: {
             facingMode: usandoCameraFrontal ? "user" : "environment"
         }
     };
 
-    // Interrompe qualquer stream de câmera ativo antes de iniciar um novo
+    // Interrompe o stream atual se houver um, para evitar conflito ao trocar de câmera
     if (streamAtual) {
         streamAtual.getTracks().forEach(track => track.stop());
     }
 
+    // Solicita acesso à câmera com as configurações definidas
     navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
             streamAtual = stream;
@@ -35,6 +36,7 @@ function iniciarCamera() {
 }
 
 function alternarCamera() {
+    // Alterna entre a câmera frontal e traseira
     usandoCameraFrontal = !usandoCameraFrontal;
     iniciarCamera();
 }
@@ -44,9 +46,11 @@ function capturarFoto() {
     const canvas = document.getElementById("canvas");
     const context = canvas.getContext("2d");
 
+    // Captura a imagem do vídeo e armazena em formato base64
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     fotoBase64 = canvas.toDataURL("image/png");
 
+    // Encerra o stream da câmera
     if (streamAtual) {
         streamAtual.getTracks().forEach(track => track.stop());
     }
@@ -59,6 +63,7 @@ function cadastrarPessoa() {
     let nome = document.getElementById("nome").value;
 
     if (cpf && nome && fotoBase64) {
+        // Armazena os dados no localStorage
         localStorage.setItem(cpf, JSON.stringify({ nome: nome, foto: fotoBase64 }));
         alert("Pessoa cadastrada com sucesso!");
 
