@@ -55,6 +55,8 @@ function cadastrarPessoa() {
         localStorage.setItem(cpf, JSON.stringify(pessoa));
         gerarPDF(cpf, pessoa);
         alert("Pessoa cadastrada com sucesso!");
+
+        // Limpa os campos após o cadastro
         document.getElementById("cpf").value = '';
         document.getElementById("nome").value = '';
         document.getElementById("idade").value = '';
@@ -88,6 +90,9 @@ function consultarPessoa() {
 
         document.getElementById("downloadPdfBtn").style.display = "inline";
         document.getElementById("deletarBtn").style.display = "inline";
+
+        // Gera o PDF sempre que o cadastro é consultado
+        gerarPDF(cpfConsulta, pessoa);
     } else {
         alert("CPF não encontrado.");
     }
