@@ -9,30 +9,45 @@
 /* Body Styling */
 body {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     background: linear-gradient(135deg, #4e54c8, #8f94fb);
     color: #333;
+    padding: 20px;
 }
 
-/* Container for Sections */
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Heading Styling */
 h2 {
-    color: #ffffff;
+    color: #4e54c8;
     margin-bottom: 15px;
     font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Form and Buttons Styling */
+/* Form Styling */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
 input[type="text"], button {
     width: 100%;
-    max-width: 300px;
-    margin: 8px 0;
     padding: 10px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #ccc;
     outline: none;
     font-size: 1rem;
 }
@@ -59,10 +74,24 @@ button:hover {
     width: 100%;
     max-width: 320px;
     height: auto;
-    border: 3px solid #fff;
-    border-radius: 10px;
+    border: 3px solid #4e54c8;
+    border-radius: 8px;
     margin-top: 15px;
+    display: block;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Info Section */
+#info {
+    font-size: 1.1rem;
+    color: #4e54c8;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Result Image Styling */
@@ -71,36 +100,21 @@ button:hover {
     max-width: 320px;
     height: auto;
     margin-top: 10px;
-    border-radius: 10px;
-    border: 2px solid #8f94fb;
-}
-
-/* Info Section */
-#info {
-    font-size: 1.1rem;
-    color: #ffffff;
-    margin-top: 10px;
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 2px solid #4e54c8;
 }
 
 /* Responsive Design */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
     h2 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
 
-    input[type="text"], button, #info {
-        max-width: 90%;
+    input[type="text"], button {
         font-size: 0.9rem;
-    }
-
-    #camera, #canvas, #fotoConsultada {
-        max-width: 90%;
     }
 }
